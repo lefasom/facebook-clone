@@ -14,16 +14,16 @@ datasource db {
 // User model representing users of the social media platform
 model User {
   id           String         @id @default(uuid())
-  username     String         @unique
   email        String         @unique
   password     String
+  createdAt    DateTime       @default(now())
   name         String?
   bio          String?
+  friendsId    String?
+  Friends      Friends?       @relation(fields: [friendsId], references: [id])
   posts        Post[]
   comments     Comment[]
   reactions    Reaction[]
-  Friends      Friends?       @relation(fields: [friendsId], references: [id])
-  friendsId    String?
   InnerComment InnerComment[]
 }
 
