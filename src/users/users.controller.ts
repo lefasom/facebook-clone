@@ -11,6 +11,11 @@ export class UsersController {
     return this.usersService.create(createUserDto);
   }
 
+  @Post('login')
+  login(@Body() createUserDto: Prisma.UserCreateInput) {
+    return this.usersService.auth(createUserDto.email, createUserDto.password);
+  }
+
   @Get()
   findAll() {
     return this.usersService.findAll();
