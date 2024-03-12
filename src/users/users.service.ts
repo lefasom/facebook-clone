@@ -17,7 +17,7 @@ export class UsersService {
   }
 
   async findAll() {
-    return await this.prisma.user.findMany()
+    return await this.prisma.user.findMany({ select: { email: true, id: true } })
   }
 
   async findOne(id: string) {

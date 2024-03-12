@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, BadRequestException } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { Prisma } from '@prisma/client';
 
@@ -8,7 +8,10 @@ export class UsersController {
 
   @Post()
   create(@Body() createUserDto: Prisma.UserCreateInput) {
-    return this.usersService.create(createUserDto);
+    return this.usersService.create(createUserDto).then()
+      .catch(() => {
+        throw new BadRequestException('Invalid email or email is already registered')
+      })
   }
 
   @Post('login')
