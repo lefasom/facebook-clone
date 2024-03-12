@@ -17,17 +17,28 @@ export class UsersService {
   }
 
   async findAll() {
-    return await this.prisma.user.findMany({ select: { email: true, id: true } })
+    return await this.prisma.user.findMany({
+      select: {
+        email: true,
+        id: true,
+        name: true,
+        bio: true
+      }
+    })
   }
 
   async findOne(id: string) {
-    return await this.prisma.user.findUnique({ where: { id }, select: { password: false, id: false } })
+    return await this.prisma.user.findUnique({
+      where: { id },
+      select: { password: false, id: false, name: true, email: true, bio: true }
+    })
   }
 
   async auth(email: string, password: string) {
     const user = await this.prisma.user.findUnique({ where: { email }, select: { id: true, password: true } })
     const isCorrectPassword = await bcrypt.compare(password, user.password)
-    return isCorrectPassword ? user.id : null
+    if (isCorrectPassword) return user.id
+    else throw new Error()
   }
 
   async update(id: string, updateUserDto: Prisma.UserUpdateInput) {

@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query, BadRequestException } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, BadRequestException, UnauthorizedException } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { Prisma } from '@prisma/client';
 
@@ -16,7 +16,10 @@ export class UsersController {
 
   @Post('login')
   login(@Body() createUserDto: Prisma.UserCreateInput) {
-    return this.usersService.auth(createUserDto.email, createUserDto.password);
+    return this.usersService.auth(createUserDto.email, createUserDto.password).then()
+      .catch(() => {
+        throw new UnauthorizedException()
+      })
   }
 
   @Get()
